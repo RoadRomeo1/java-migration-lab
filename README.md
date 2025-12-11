@@ -21,6 +21,29 @@ The codebase is divided into two main packages:
 
 ## Running the Application
 
+### Option 1: Docker (Recommended)
+
+1.  **Start with Docker Compose**:
+    ```bash
+    cd docker
+    docker-compose up -d
+    ```
+    The application will start on `http://localhost:8080` with PostgreSQL database.
+
+2.  **View logs**:
+    ```bash
+    docker-compose logs -f app
+    ```
+
+3.  **Stop the application**:
+    ```bash
+    docker-compose down
+    ```
+
+See [docker/README.md](docker/README.md) for detailed Docker deployment guide.
+
+### Option 2: Local Development
+
 1.  **Build the project**:
     ```bash
     mvn clean install
@@ -30,7 +53,7 @@ The codebase is divided into two main packages:
     ```bash
     mvn spring-boot:run
     ```
-    The application will start on `http://localhost:8080`.
+    The application will start on `http://localhost:8080` with H2 in-memory database.
 
 ## API Endpoints
 
@@ -82,7 +105,7 @@ k6 run spike-test.js
   - Configure test containers for database integration tests
   - Add to Jenkins pipeline
 
-- [ ] **Containerization**
+- [x] **Containerization** ✅
   - Create Dockerfile for the application
   - Set up Docker Compose for local development (app + database)
   - Create Kubernetes manifests (Deployment, Service, ConfigMap)
