@@ -22,7 +22,7 @@ class EmployeeControllerTest {
         // Java 15 Feature: Text Blocks
         String fullTimeEmployeeJson = """
                 {
-                    "type": "FULL_TIME",
+                    "employeeType": "FULL_TIME",
                     "name": "Alice",
                     "email": "alice@example.com",
                     "annualSalary": 120000.0
@@ -34,7 +34,7 @@ class EmployeeControllerTest {
                 .content(fullTimeEmployeeJson))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.name").value("Alice"))
-                .andExpect(jsonPath("$.type").value("FULL_TIME"));
+                .andExpect(jsonPath("$.employeeType").value("FULL_TIME"));
     }
 
     @Test
@@ -42,7 +42,7 @@ class EmployeeControllerTest {
         // Java 15 Feature: Text Blocks
         String contractorJson = """
                 {
-                    "type": "CONTRACTOR",
+                    "employeeType": "CONTRACTOR",
                     "name": "Bob",
                     "email": "bob@example.com",
                     "hourlyRate": 50.0,
@@ -55,14 +55,14 @@ class EmployeeControllerTest {
                 .content(contractorJson))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.name").value("Bob"))
-                .andExpect(jsonPath("$.type").value("CONTRACTOR"));
+                .andExpect(jsonPath("$.employeeType").value("CONTRACTOR"));
     }
 
     @Test
     void testCalculatePay() throws Exception {
         String fullTimeEmployeeJson = """
                 {
-                    "type": "FULL_TIME",
+                    "employeeType": "FULL_TIME",
                     "name": "Charlie",
                     "email": "charlie@example.com",
                     "annualSalary": 120000.0
