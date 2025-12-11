@@ -99,11 +99,11 @@ k6 run spike-test.js
     - Performance tests (k6 scripts)
     - Build verification (`mvn clean install`)
 
-- [ ] **Integration Testing**
+- [x] **Integration Testing**
   - Set up integration test suite
   - Add end-to-end API tests
   - Configure test containers for database integration tests
-  - Add to Jenkins pipeline
+    
 
 - [x] **Containerization** ✅
   - Create Dockerfile for the application
