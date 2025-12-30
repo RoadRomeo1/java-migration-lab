@@ -1,42 +1,45 @@
 version: '3.8'
 
 services:
-  # Java Application
-  app:
+  # People Management Service
+  people-service:
     build:
       context: ..
       dockerfile: docker/Dockerfile
-    container_name: java-migration-lab
+      args:
+        MODULE_JAR: people-management-service/target/*.jar
+    container_name: people-management-service
     ports:
       - "8080:8080"
     environment:
-      # Spring profiles
       - SPRING_PROFILES_ACTIVE=docker
-      # Database configuration (using PostgreSQL in Docker)
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/employeedb
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/peopledb
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=postgres
-      - SPRING_DATASOURCE_DRIVER_CLASS_NAME=org.postgresql.Driver
-      - SPRING_JPA_DATABASE_PLATFORM=org.hibernate.dialect.PostgreSQLDialect
-      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
-      # Virtual threads
-      - SPRING_THREADS_VIRTUAL_ENABLED=true
-      # Hikari connection pool
-      - SPRING_DATASOURCE_HIKARI_MAXIMUM_POOL_SIZE=50
-      - SPRING_DATASOURCE_HIKARI_MINIMUM_IDLE=10
-      # JVM options (already set in Dockerfile, but can override here)
-      - JAVA_OPTS=-XX:+UseZGC -XX:+ZGenerational --enable-preview
     depends_on:
       postgres:
         condition: service_healthy
     networks:
       - app-network
-    healthcheck:
-      test: [ "CMD", "curl", "-f", "http://localhost:8080/actuator/health" ]
-      interval: 30s
-      timeout: 10s
-      retries: 5
-      start_period: 40s
+    restart: unless-stopped
+
+  # Indian Tax Engine Service
+  tax-service:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+      args:
+        MODULE_JAR: tax-engine-service/target/*.jar
+    container_name: tax-engine-service
+    ports:
+      - "8081:8081"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - APP_SERVICES_PEOPLE-SERVICE_URL=http://people-service:8080
+    depends_on:
+      - people-service
+    networks:
+      - app-network
     restart: unless-stopped
 
   # PostgreSQL Database
@@ -44,7 +47,7 @@ services:
     image: postgres:16-alpine
     container_name: postgres-db
     environment:
-      - POSTGRES_DB=employeedb
+      - POSTGRES_DB=peopledb
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
     ports:

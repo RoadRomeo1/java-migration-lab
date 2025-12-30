@@ -1,136 +1,64 @@
-# Java 17 Migration Practice
+## 📚 Project Documentation
 
-This project is a hands-on practice application designed to demonstrate the migration of a Java 8 application to Java 17. It contains two parallel implementations of an Employee Management System: one using legacy Java 8 patterns and another leveraging modern Java 17 features.
+To maintain a clean and professional structure, all deep-dive documentation has been centralized in the `/docs` directory:
 
-## Project Structure
+- [**System Architecture**](./docs/ARCHITECTURAL_BLUEPRINT.md): High-level design and monorepo structure.
+- [**Deployment & Environments**](./docs/DEPLOYMENT_GUIDE.md): How to run the app in Local, Docker, and Cloud.
+- [**Tax Engine Standards**](./docs/TAX_ENGINE_STANDARDS.md): Logical breakdown of Indian Tax laws and our Strategy implementation.
+- [**Java 21 Migration Guide**](./docs/JAVA_21_MIGRATION_GUIDE.md): Technical checklist of features migrated (Records, Switch Expressions, etc.).
 
-The codebase is divided into two main packages:
+---
 
-- **`com.example.javamigrationlab.legacy`**: Represents the "Before" state (Java 8).
-  - Uses standard POJOs, explicit casting, and traditional switch statements.
-- **`com.example.javamigrationlab.modern`**: Represents the "After" state (Java 17).
-  - **Sealed Interfaces**: `Employee` interface permits specific implementations.
-  - **Records**: Concise data carriers for `FullTimeEmployee` and `Contractor`.
-  - **Pattern Matching**: Simplified `instanceof` checks.
-  - **Switch Expressions**: More readable and less error-prone logic.
+## 🚀 Quick Start
 
-## Prerequisites
-
-- Java 17 or higher
-- Maven 3.6+
-
-## Running the Application
-
-### Option 1: Docker (Recommended)
-
-1.  **Start with Docker Compose**:
-
-    ```bash
-    cd docker
-    docker-compose up -d
-    ```
-
-    The application will start on `http://localhost:8080` with PostgreSQL database.
-
-2.  **View logs**:
-
-    ```bash
-    docker-compose logs -f app
-    ```
-
-3.  **Stop the application**:
-    ```bash
-    docker-compose down
-    ```
-
-See [docker/README.md](docker/README.md) for detailed Docker deployment guide.
-
-### Option 2: Local Development
-
-1.  **Build the project**:
-
-    ```bash
-    mvn clean install
-    ```
-
-2.  **Run the application**:
-    ```bash
-    mvn spring-boot:run
-    ```
-    The application will start on `http://localhost:8080` with H2 in-memory database.
-
-## API Endpoints
-
-### Modern Endpoints (Java 17)
-
-| Method | URL                   | Description                                     |
-| :----- | :-------------------- | :---------------------------------------------- |
-| `POST` | `/employees`          | Create a new employee (Full Time or Contractor) |
-| `GET`  | `/employees/{id}`     | Get employee details                            |
-| `GET`  | `/employees`          | List all employees                              |
-| `GET`  | `/employees/{id}/pay` | Calculate pay using modern logic                |
-
-## Testing
-
-### Unit Tests
-
+### Running with Docker (Full Stack)
 ```bash
+cd docker
+docker-compose up -d --build
+```
+- People Service: `http://localhost:8080`
+- Tax Engine Service: `http://localhost:8081`
+
+### Running Locally (Individual Services)
+```bash
+mvn clean install -DskipTests
+# Service 1
+mvn spring-boot:run -pl people-management-service
+# Service 2
+mvn spring-boot:run -pl tax-engine-service
+```
+
+## 🧪 Testing
+
+### Automated Tests
+```bash
+# Run all tests in the ecosystem
 mvn test
 ```
 
-### Performance Tests
+### Performance Benchmarks
+See `people-management-service/src/test/performance/README.md` for k6 load testing instructions.
 
-See `src/test/performance/README.md` for detailed instructions.
+---
 
-```bash
-cd src/test/performance/scripts
-k6 run load-test.js
-k6 run spike-test.js
-```
+## 🛠️ Roadmap & TODO
 
-## TODO
+Current Phase: **Phase 2 - Intelligent Orchestration** (Completed ✅)
 
-- [ ] **Jenkins CI/CD Setup**
-
-  - Install Jenkins locally
-  - Create pipeline job for on-demand test execution
-  - Configure jobs for:
-    - Unit tests (`mvn test`)
-    - Performance tests (k6 scripts)
-    - Build verification (`mvn clean install`)
-
-- [x] **Integration Testing**
-
-  - Set up integration test suite
-  - Add end-to-end API tests
-  - Configure test containers for database integration tests
-
-- [x] **Containerization** ✅
-
-  - Create Dockerfile for the application
-  - Set up Docker Compose for local development (app + database)
-  - Create Kubernetes manifests (Deployment, Service, ConfigMap)
-  - Configure health checks and resource limits
-  - Document container deployment process
+- [ ] **Tax Engine Roadmap**
+  - [ ] **Robustness & Testing**: Implement negative cases, edge cases, and stress tests.
+  - [ ] **Expanded Tax Rules**: Implement Sections 80C, 80D, 24b and Surcharges.
+  - [ ] **Regime Optimization**: Endpoint to suggest optimal regime (Old vs New).
+  - [ ] **Internal Research**: Explore `RestClient` vs `OpenFeign`.
 
 - [ ] **Observability & Ops**
+  - [ ] Add Spring Boot Actuator to all services.
+  - [ ] Standardize structured logging and Correlation IDs.
 
-  - Add Spring Boot Actuator with health, metrics, and info endpoints
-  - Configure liveness and readiness probes for container/Kubernetes usage
-  - Standardize structured logging (correlation IDs, request logging)
-  - Add basic dashboards/alerts examples (e.g., Prometheus/Grafana notes)
+- [ ] **Infrastructure**
+  - [ ] Jenkins CI/CD Pipeline integration.
+  - [ ] Multi-DB support (PostgreSQL/MySQL toggle).
 
-- [ ] **RDBMS Flexibility**
-  - Abstract database configuration using Spring profiles
-  - Add support for multiple databases:
-    - PostgreSQL
-    - MySQL
-    - Oracle
-    - SQL Server
-  - Create profile-specific `application-{db}.properties` files
-  - Update schema to use JPA annotations compatible with all RDBMS
-  - Add Flyway/Liquibase for database migrations
-  - Document database setup for each supported RDBMS
 
 ## Resources
 

@@ -1,47 +1,37 @@
-# Multi-stage Dockerfile for Java 21 Application
-# Stage 1: Build the application
-FROM maven:3.9-eclipse-temurin-21 AS builder
-
+# Build stage
+FROM maven:3.9-eclipse-temurin-21-alpine AS builder
 WORKDIR /app
 
-# Copy pom.xml and download dependencies (cached layer)
+# Copy root pom and common-lib first for better caching
 COPY pom.xml .
+COPY common-lib/pom.xml common-lib/
+COPY people-management-service/pom.xml people-management-service/
+COPY tax-engine-service/pom.xml tax-engine-service/
+
+# Cache dependencies
 RUN mvn dependency:go-offline -B
 
-# Copy source code and build
-COPY src ./src
+# Copy all source code
+COPY . .
+
+# Build all modules
 RUN mvn clean package -DskipTests -B
 
-# Stage 2: Create the runtime image
+# Final runtime image
 FROM eclipse-temurin:21-jre-jammy
-
 WORKDIR /app
 
-# Create a non-root user for security
-RUN groupadd -r appuser && useradd -r -g appuser appuser
+# Add a generic JAR argument to pick the right one
+ARG MODULE_JAR
+COPY ${MODULE_JAR} app.jar
 
-# Copy the built JAR from builder stage
-COPY --from=builder /app/target/*.jar app.jar
-
-# Change ownership to non-root user
-RUN chown -R appuser:appuser /app
-
-# Switch to non-root user
-USER appuser
-
-# Expose the application port
 EXPOSE 8080
+EXPOSE 8081
 
-# Health check
-HEALTHCHECK --interval=30s --timeout=3s --start-period=40s --retries=3 \
-  CMD curl -f http://localhost:8080/actuator/health || exit 1
-
-# JVM options for containerized environment
 ENV JAVA_OPTS="-XX:+UseContainerSupport \
-               -XX:MaxRAMPercentage=75.0 \
-               -XX:+UseZGC \
-               -XX:+ZGenerational \
-               --enable-preview"
+  -XX:MaxRAMPercentage=75.0 \
+  -XX:+UseZGC \
+  -XX:+ZGenerational \
+  --enable-preview"
 
-# Run the application
 ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar app.jar"]
