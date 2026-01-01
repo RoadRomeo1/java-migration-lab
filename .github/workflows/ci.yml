@@ -35,13 +35,10 @@ jobs:
         distribution: 'temurin'
         cache: maven
 
-    - name: Build with Maven
-      run: mvn clean install -DskipTests
-
-    - name: Static Analysis & Quality Gate
-      run: mvn verify site -DskipTests
-      # This will fail the build if Checkstyle (configured as error), 
-      # PMD, or SpotBugs find issues.
+    - name: Build, Test & Static Analysis
+      run: mvn clean verify site -DskipTests
+      # This will fail the build if PMD or SpotBugs find issues.
+      # Checkstyle is currently advisory.
 
     - name: Archive Analysis Reports
       if: always()
