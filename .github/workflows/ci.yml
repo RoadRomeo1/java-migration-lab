@@ -47,4 +47,6 @@ jobs:
         name: quality-reports
         path: |
           **/target/site/**
-          **/target/*.xml
+          **/target/checkstyle-result.xml
+          **/target/pmd.xml
+          **/target/spotbugsXml.xml
