@@ -21,4 +21,4 @@
 - 
 
 ---
-*By submitting this PR, I confirm that the code follows the project's [Quality Standards](./docs/QUALITY_STANDARDS.md).*
+*By submitting this PR, I confirm that the code follows the project's [Quality Standards](../docs/QUALITY_STANDARDS.md).*
