@@ -5,6 +5,7 @@ To maintain a clean and professional structure, all deep-dive documentation has 
 - [**System Architecture**](./docs/ARCHITECTURAL_BLUEPRINT.md): High-level design and monorepo structure.
 - [**Deployment & Environments**](./docs/DEPLOYMENT_GUIDE.md): How to run the app in Local, Docker, and Cloud.
 - [**Tax Engine Standards**](./docs/TAX_ENGINE_STANDARDS.md): Logical breakdown of Indian Tax laws and our Strategy implementation.
+- [**Quality Standards**](./docs/QUALITY_STANDARDS.md): Guide to Checkstyle, PMD, and SpotBugs integration.
 - [**Java 21 Migration Guide**](./docs/JAVA_21_MIGRATION_GUIDE.md): Technical checklist of features migrated (Records, Switch Expressions, etc.).
 
 ---

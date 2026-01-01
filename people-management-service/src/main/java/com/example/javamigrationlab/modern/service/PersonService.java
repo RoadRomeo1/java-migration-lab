@@ -20,18 +20,9 @@ public class PersonService {
     }
 
     public Person createPerson(Person person) {
-        // simulateNetworkLatency();
         PersonEntity entity = mapToEntity(person);
         PersonEntity savedEntity = personRepository.save(entity);
         return mapToDomain(savedEntity);
-    }
-
-    private void simulateNetworkLatency() {
-        try {
-            Thread.sleep(50); // Simulate 50ms DB latency
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }
     }
 
     public Person getPerson(Long id) {
@@ -49,14 +40,14 @@ public class PersonService {
     public BigDecimal calculateMonthlyIncome(Long id) {
         Person person = getPerson(id);
         return switch (person) {
-            case FullTimeEmployee(_, _, _, var salary) -> 
-                salary.divide(BigDecimal.valueOf(12), 2, RoundingMode.HALF_UP);
-            case Contractor(_, _, _, var rate, var hours) -> 
-                rate.multiply(BigDecimal.valueOf(hours));
-            case SelfEmployed(_, _, _, var turnover, _) -> 
-                turnover.divide(BigDecimal.valueOf(12), 2, RoundingMode.HALF_UP);
-            case BusinessOwner(_, _, _, var turnover, _) -> 
-                turnover.divide(BigDecimal.valueOf(12), 2, RoundingMode.HALF_UP);
+            case FullTimeEmployee(_, _, _, BigDecimal annualSalary) -> 
+                annualSalary.divide(BigDecimal.valueOf(12), 2, RoundingMode.HALF_UP);
+            case Contractor(_, _, _, BigDecimal hourlyRate, Integer hoursWorked) -> 
+                hourlyRate.multiply(BigDecimal.valueOf(hoursWorked));
+            case SelfEmployed(_, _, _, BigDecimal annualTurnover, _) -> 
+                annualTurnover.divide(BigDecimal.valueOf(12), 2, RoundingMode.HALF_UP);
+            case BusinessOwner(_, _, _, BigDecimal annualBusinessTurnover, _) -> 
+                annualBusinessTurnover.divide(BigDecimal.valueOf(12), 2, RoundingMode.HALF_UP);
         };
     }
 
@@ -67,19 +58,20 @@ public class PersonService {
         entity.setType(person.personType());
 
         switch (person) {
-            case FullTimeEmployee(_, _, _, var salary) -> entity.setAmount(salary);
-            case Contractor(_, _, _, var rate, var hours) -> {
-                entity.setAmount(rate);
-                entity.setHoursWorked(hours);
+            case FullTimeEmployee(_, _, _, BigDecimal annualSalary) -> entity.setAmount(annualSalary);
+            case Contractor(_, _, _, BigDecimal hourlyRate, Integer hoursWorked) -> {
+                entity.setAmount(hourlyRate);
+                entity.setHoursWorked(hoursWorked);
             }
-            case SelfEmployed(_, _, _, var turnover, var profession) -> {
-                entity.setAmount(turnover);
+            case SelfEmployed(_, _, _, BigDecimal annualTurnover, String profession) -> {
+                entity.setAmount(annualTurnover);
                 entity.setProfession(profession);
             }
-            case BusinessOwner(_, _, _, var turnover, var businessType) -> {
-                entity.setAmount(turnover);
+            case BusinessOwner(_, _, _, BigDecimal annualBusinessTurnover, String businessType) -> {
+                entity.setAmount(annualBusinessTurnover);
                 entity.setBusinessType(businessType);
             }
+            default -> throw new IllegalArgumentException("Unknown person type: " + person.getClass());
         }
         return entity;
     }

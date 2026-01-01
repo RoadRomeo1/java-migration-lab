@@ -6,7 +6,6 @@ import com.example.tax.constants.TaxConstants;
 import com.example.tax.strategy.TaxRegimeStrategy;
 import com.example.tax.strategy.TaxStrategyFactory;
 import org.springframework.stereotype.Service;
-
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
@@ -60,13 +59,13 @@ public class TaxCalculationService {
             case Contractor _ -> BigDecimal.ZERO; 
             
             // Professionals: Sec 44ADA (50% is Income, so 50% is Deduction as expenses)
-            case SelfEmployed(_, _, _, var turnover, _) -> 
-                turnover.multiply(BigDecimal.ONE.subtract(TaxConstants.Presumptive.SEC_44ADA_PROFESSIONAL_RATE))
+            case SelfEmployed(_, _, _, BigDecimal annualTurnover, _) -> 
+                annualTurnover.multiply(BigDecimal.ONE.subtract(TaxConstants.Presumptive.SEC_44ADA_PROFESSIONAL_RATE))
                         .setScale(2, RoundingMode.HALF_UP);
             
             // Businesses: Sec 44AD (6% is Income, so 94% is Deduction as expenses)
-            case BusinessOwner(_, _, _, var turnover, _) -> 
-                turnover.multiply(BigDecimal.ONE.subtract(TaxConstants.Presumptive.SEC_44AD_BUSINESS_DIGITAL_RATE))
+            case BusinessOwner(_, _, _, BigDecimal annualBusinessTurnover, _) -> 
+                annualBusinessTurnover.multiply(BigDecimal.ONE.subtract(TaxConstants.Presumptive.SEC_44AD_BUSINESS_DIGITAL_RATE))
                         .setScale(2, RoundingMode.HALF_UP);
         };
     }
