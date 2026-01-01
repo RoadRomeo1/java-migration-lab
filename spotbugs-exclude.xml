@@ -9,8 +9,17 @@
         <Bug pattern="DLS_DEAD_LOCAL_STORE" />
         <Source name="~.*\.java" />
         <Or>
-            <Class name="~.*TaxCalculationService" />
-            <Class name="~.*PersonService" />
+            <And>
+                <Class name="~.*TaxCalculationService" />
+                <Method name="calculateDeductions" />
+            </And>
+            <And>
+                <Class name="~.*PersonService" />
+                <Or>
+                    <Method name="calculateMonthlyIncome" />
+                    <Method name="mapToEntity" />
+                </Or>
+            </And>
         </Or>
     </Match>
 </FindBugsFilter>
