@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FindBugsFilter>
+    <!-- 
+        False Positive: Dead Local Store (DLS_DEAD_LOCAL_STORE) 
+        Reason: SpotBugs 4.8.x has known issues with Java 21 Record Patterns / Pattern Matching for Switch.
+        It incorrectly identifies deconstructed components as unused dead stores.
+    -->
+    <Match>
+        <Bug pattern="DLS_DEAD_LOCAL_STORE" />
+        <Source name="~.*\.java" />
+        <Or>
+            <And>
+                <Class name="~.*TaxCalculationService" />
+                <Method name="calculateDeductions" />
+            </And>
+            <And>
+                <Class name="~.*PersonService" />
+                <Or>
+                    <Method name="calculateMonthlyIncome" />
+                    <Method name="mapToEntity" />
+                </Or>
+            </And>
+        </Or>
+    </Match>
+</FindBugsFilter>

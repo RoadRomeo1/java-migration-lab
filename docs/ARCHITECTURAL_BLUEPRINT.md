@@ -77,8 +77,8 @@ graph TD
 ---
 
 ## 5. Roadmap
-- [ ] **Phase 1**: Restructure into Maven Multi-Module Monorepo.
-- [ ] **Phase 2**: Implement `Person` hierarchy in `people-management-service`.
-- [ ] **Phase 3**: Create `tax-engine-service` with basic Indian Tax Slabs (New Regime).
+- [x] **Phase 1**: Restructure into Maven Multi-Module Monorepo.
+- [x] **Phase 2**: Implement `Person` hierarchy in `people-management-service`.
+- [x] **Phase 3**: Create `tax-engine-service` with basic Indian Tax Slabs (New Regime).
 - [ ] **Phase 4**: Add Deduction/Exemption modules (80C, HRA).
 - [ ] **Phase 5**: Intelligence layer - Scraping & Savings Suggestions.

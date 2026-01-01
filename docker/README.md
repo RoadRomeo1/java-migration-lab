@@ -326,7 +326,7 @@ docker system prune -a
 ## Next Steps
 
 - [ ] Set up Kubernetes manifests for orchestration
-- [ ] Configure CI/CD pipeline
+- [x] Configure CI/CD pipeline
 - [ ] Add monitoring with Prometheus
 - [ ] Implement distributed tracing
 - [ ] Set up log aggregation
