@@ -35,8 +35,8 @@ After the command completes, the reports are centralized in each module's target
 ## 🛡️ Enforcement Logic
 
 These tools are bound to the Maven `verify` phase. This means:
-* **CI/CD Safety**: If a developer pushes code that violates style or has a potential null pointer bug, the build will **FAIL** Automatically.
-* **Java 21 Ready**: We use the latest versions of these tools (Checkstyle 10.14+, PMD 7+) to support modern features like Records and Record Patterns.
+* **CI/CD Safety**: If a developer pushes code with logical bugs or best-practice violations (PMD/SpotBugs), the build will fail automatically. Styling issues (Checkstyle) are currently advisory and will not block the build.
+* **Java 21 Ready**: We use the latest versions of these tools to support modern features like records and record patterns.
 
 ---
 
