@@ -37,8 +37,8 @@
 
 ## 3. Verification
 
-- [ ] Run `mvn clean install` to ensure the build passes.
-- [ ] Run the app and verify endpoints still work.
+- [x] Run `mvn clean install` to ensure the build passes.
+- [x] Run the app and verify endpoints still work.
 
 ## 4. Suggested Changes for Java 17 to 21 Migration
 
