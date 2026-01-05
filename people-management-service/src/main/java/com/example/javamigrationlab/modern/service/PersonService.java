@@ -3,6 +3,7 @@ package com.example.javamigrationlab.modern.service;
 import com.example.common.domain.*;
 import com.example.javamigrationlab.entity.PersonEntity;
 import com.example.javamigrationlab.repository.PersonRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -10,6 +11,7 @@ import java.math.RoundingMode;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 public class PersonService {
 
@@ -26,6 +28,7 @@ public class PersonService {
     }
 
     public Person getPerson(Long id) {
+        log.info("Fetching person with ID: {}", id);
         return personRepository.findById(id)
                 .map(this::mapToDomain)
                 .orElseThrow(() -> new RuntimeException("Person not found with id: " + id));
