@@ -6,7 +6,9 @@ To maintain a clean and professional structure, all deep-dive documentation has 
 - [**Deployment & Environments**](./docs/DEPLOYMENT_GUIDE.md): How to run the app in Local, Docker, and Cloud.
 - [**Tax Engine Standards**](./docs/TAX_ENGINE_STANDARDS.md): Logical breakdown of Indian Tax laws and our Strategy implementation.
 - [**Quality Standards**](./docs/QUALITY_STANDARDS.md): Guide to Checkstyle, PMD, and SpotBugs integration.
+- [**API Test Plan**](./docs/API_TEST_PLAN.md): Manual verification steps and Postman payloads.
 - [**Java 21 Migration Guide**](./docs/JAVA_21_MIGRATION_GUIDE.md): Technical checklist of features migrated (Records, Switch Expressions, etc.).
+
 
 ---
 
@@ -17,8 +19,9 @@ To maintain a clean and professional structure, all deep-dive documentation has 
 cd docker
 docker-compose up -d --build
 ```
-- People Service: `http://localhost:8080`
 - Tax Engine Service: `http://localhost:8081`
+> **Note**: If you face database errors like `database "peopledb" does not exist`, run `docker-compose down -v` to reset the volumes and restart.
+
 
 ### Running Locally (Individual Services)
 ```bash
@@ -53,8 +56,9 @@ Current Phase: **Phase 2 - Intelligent Orchestration** (Completed ✅)
   - [ ] **Internal Research**: Explore `RestClient` vs `OpenFeign`.
 
 - [ ] **Observability & Ops**
-  - [ ] Add Spring Boot Actuator to all services.
-  - [ ] Standardize structured logging and Correlation IDs.
+  - [x] Add Spring Boot Actuator to all services.
+  - [x] Standardize structured logging and Correlation IDs.
+
 
 - [ ] **Infrastructure**
   - [x] GitHub Actions CI/CD Pipeline integration.

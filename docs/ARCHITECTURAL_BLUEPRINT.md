@@ -66,6 +66,78 @@ graph TD
 4.  **Computation**: The Tax Engine applies Java 21 `switch` expressions to determine the tax liability based on the latest Indian Budget slabs.
 5.  **Output**: Returns a detailed breakdown of Tax, Cess, Surcharge, and Savings Tips.
 
+### 3.1 Interaction Flow (Orchestration)
+The following sequence explains how a tax calculation request is enriched with live person data.
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant TaxApp as Tax Engine Service
+    participant PeopleApp as People Service
+    participant DB as PostgreSQL
+
+    User->>TaxApp: GET /tax/calculate/{personId} (Regime: NEW)
+    activate TaxApp
+    
+    Note right of TaxApp: Generated Correlation ID
+    
+    TaxApp->>PeopleApp: GET /people/{id}
+    activate PeopleApp
+    PeopleApp->>DB: Fetch Person Entity
+    DB-->>PeopleApp: Person Data
+    PeopleApp-->>TaxApp: Return Person (JSON Record)
+    deactivate PeopleApp
+    
+    Note right of TaxApp: Orchestrator selects Strategy
+    TaxApp->>TaxApp: Apply Deductions (Pattern Matching)
+    TaxApp->>TaxApp: Calculate Tax & Cess
+    
+    TaxApp-->>User: Return TaxResult (Breakdown)
+    deactivate TaxApp
+```
+
+### 3.2 Domain Model (Sealed Hierarchy)
+The core `Person` model uses Java 21 advanced features to ensure type safety and exhaustive pattern matching.
+
+```mermaid
+classDiagram
+    class Person {
+        <<sealed interface>>
+        +Long id
+        +String name
+        +String email
+        +BigDecimal income()
+    }
+
+    class FullTimeEmployee {
+        <<record>>
+        +BigDecimal annualSalary
+    }
+
+    class Contractor {
+        <<record>>
+        +BigDecimal hourlyRate
+        +int hoursWorked
+    }
+
+    class SelfEmployed {
+        <<record>>
+        +BigDecimal annualTurnover
+        +String profession
+    }
+
+    class BusinessOwner {
+        <<record>>
+        +BigDecimal annualBusinessTurnover
+        +String businessType
+    }
+
+    Person <|-- FullTimeEmployee
+    Person <|-- Contractor
+    Person <|-- SelfEmployed
+    Person <|-- BusinessOwner
+```
+
 ---
 
 ## 4. Java 21 Showcase Features

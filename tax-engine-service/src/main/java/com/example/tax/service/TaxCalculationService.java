@@ -5,6 +5,7 @@ import com.example.common.enums.TaxRegime;
 import com.example.tax.constants.TaxConstants;
 import com.example.tax.strategy.TaxRegimeStrategy;
 import com.example.tax.strategy.TaxStrategyFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -13,6 +14,7 @@ import java.math.RoundingMode;
  * Smart Tax Calculation Orchestrator.
  * USES Strategy Pattern and Java 21 Record Patterns for maximum flexibility.
  */
+@Slf4j
 @Service
 public class TaxCalculationService {
 
@@ -23,6 +25,9 @@ public class TaxCalculationService {
     }
 
     public TaxResult calculateTax(Person person, TaxRegime regime) {
+        if (log.isInfoEnabled()) {
+            log.info("Calculating tax for person ID: {}", person.id());
+        }
         TaxRegimeStrategy strategy = strategyFactory.getStrategy(regime);
 
         BigDecimal grossIncome = person.income();
